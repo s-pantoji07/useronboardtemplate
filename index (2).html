@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Local Vendors</title>
+    <link rel="stylesheet" href="userdashboard.css">
+    <script>
+        // Function to get the user's current location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showVendors, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to show vendors based on the user's location and selected filters
+        function showVendors(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const type = document.getElementById('vendorType').value;
+            const rating = document.getElementById('vendorRating').value;
+
+            // Normally you would call an API to fetch vendors based on latitude and longitude
+            // For this example, we're just displaying a filtered list
+            document.getElementById('vendors').innerHTML = `
+                <h3>Vendors near your location (${latitude}, ${longitude}):</h3>
+                <ul>
+                    <li>Vendor 1: Local Bakery (Type: Bakery, Rating: 5/5)</li>
+                    <li>Vendor 2: Fresh Produce Stand (Type: Produce, Rating: 4/5)</li>
+                    <li>Vendor 3: Artisan Crafts (Type: Crafts, Rating: 5/5)</li>
+                    <!-- More vendors would be listed here based on actual filter logic -->
+                </ul>
+            `;
+        }
+
+        // Function to handle errors with getting the location
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        // Function to apply filters and fetch vendors
+        function applyFilters() {
+            // Call the function to get the current location and show vendors with filters applied
+            getLocation();
+        }
+    </script>
+</head>
+<body onload="getLocation()">
+    <header>
+        <h1>Find Local Vendors</h1>
+    </header>
+    <main>
+        <section class="filters">
+            <h2>Filter Vendors</h2>
+            <form id="filterForm" onsubmit="applyFilters(); return false;">
+                <label for="vendorType">Type:</label>
+                <select id="vendorType">
+                    <option value="">All</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="produce">Produce</option>
+                    <option value="crafts">Crafts</option>
+                    <!-- More types can be added here -->
+                </select>
+
+                <label for="vendorRating">Rating:</label>
+                <select id="vendorRating">
+                    <option value="">All</option>
+                    <option value="5">5/5</option>
+                    <option value="4">4/5</option>
+                    <option value="3">3/5</option>
+                    <!-- More ratings can be added here -->
+                </select>
+
+                <button type="submit">Apply Filters</button>
+            </form>
+        </section>
+
+        <section class="location">
+            <h2>Your Location</h2>
+            <p>Finding vendors near you...</p>
+            <div id="vendors">
+                <!-- Vendor list will be populated here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Genie's Gems. All rights reserved.</p>
+    </footer>
+</body>
+</html>
